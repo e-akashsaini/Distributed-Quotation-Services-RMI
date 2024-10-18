@@ -1,0 +1,62 @@
+services:
+  core:
+    build: ./core
+    container_name: core
+    networks:
+      - trynetwork
+
+  auldfellas:
+    build: ./auldfellas
+    container_name: auldfellas
+    depends_on:
+      - core
+    networks:
+      - trynetwork
+
+
+  broker:
+    build: ./broker
+    container_name: broker
+    depends_on:
+      - core
+      - auldfellas
+      - dodgygeezers
+      - girlsallowed
+    networks:
+      - trynetwork
+    ports:
+      - "1099:1099"  # RMI registry port
+
+  dodgygeezers:
+    build: ./dodgygeezers
+    container_name: dodgygeezers
+    depends_on:
+      - core
+    networks:
+      - trynetwork
+
+  girlsallowed:
+    build: ./girlsallowed
+    container_name: girlsallowed
+    depends_on:
+      - core
+    networks:
+      - trynetwork
+
+
+  client:
+    build: ./client
+    container_name: client
+    depends_on:
+      - core
+      - auldfellas
+      - dodgygeezers
+      - girlsallowed
+      - broker
+    networks:
+      - trynetwork
+
+
+networks:
+  trynetwork:
+    driver: bridge
